@@ -1,0 +1,115 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>technicalterms</name>
+    <groupId>edu.cs.umass</groupId>
+    <artifactId>technicalterms</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <scala.majorVersion>2.10</scala.majorVersion>
+        <scala.minorVersion>.4</scala.minorVersion>
+        <scalatest.version>2.2.2</scalatest.version>
+        <junit.version>4.10</junit.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>dev-iesl.cs.umass.edu</id>
+            <name>dev-iesl.cs.umass.edu</name>
+            <url>https://dev-iesl.cs.umass.edu/nexus/content/repositories/thirdparty/</url>
+        </repository>
+        <repository>
+            <id>iesl-snapshots</id>
+            <name>iesl-snapshots</name>
+            <url>https://dev-iesl.cs.umass.edu/nexus/content/groups/public-snapshots/</url>
+        </repository>
+        <repository>
+            <id>IESL Releases</id>
+            <name>IESL Repo</name>
+            <url>https://dev-iesl.cs.umass.edu/nexus/content/groups/public</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.majorVersion}${scala.minorVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-compiler</artifactId>
+            <version>${scala.majorVersion}${scala.minorVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>cc.factorie</groupId>
+            <artifactId>factorie_2.11</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>cc.factorie.app.nlp</groupId>
+            <artifactId>all-models</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+
+
+            <plugins>
+
+            <!-- Adds support for building Scala -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <recompileMode>incremental</recompileMode>
+                    <useZincServer>true</useZincServer>
+                    <scalaVersion>${scala.majorVersion}${scala.minorVersion}</scalaVersion>
+                    <jvmArgs>
+                        <jvmArg>-Xms64m</jvmArg>
+                        <jvmArg>-Xmx1800m</jvmArg>
+                    </jvmArgs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy package</goals>
+                </configuration>
+            </plugin>
+
+
+
+        </plugins>
+    </build>
+
+
+    </project>
