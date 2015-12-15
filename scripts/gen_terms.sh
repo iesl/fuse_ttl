@@ -13,21 +13,16 @@ fi
 
 disp_dir=${TECHTERMS_DIR}/output/terms/${DISP}
 
-if [ ! -d ${disp_dir} ]; then
-   echo "${disp_dir} not found."
-   echo run "${TECHTERMS_DIR}/scripts/gen_disp_data.sh"
-   exit 1
-fi 
 
 if [ ! -e ${disp_dir}/pos.list ]; then
     echo "${disp_dir} not found"
-    echo "make list of postive examples for the disp ${DISP}"
+    echo run "${TECHTERMS_DIR}/scripts/gen_pos_neg_lists.sh"
     exit 1
 fi
 
 if [ ! -e ${disp_dir}/neg.list ]; then
     echo "${disp_dir} not found"
-    echo "make list of negative examples for the disp ${DISP}"
+    echo run "${TECHTERMS_DIR}/scripts/gen_pos_neg_lists.sh"
     exit 1
 fi
 
