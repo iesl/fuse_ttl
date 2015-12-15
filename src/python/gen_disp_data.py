@@ -28,6 +28,7 @@ fdata_file             = ''
 fvocab_file            = ''
 fdisp_data_file        = ''
 fdisp_vocab_file       = ''
+fdisp_score_file       = ''
 ##### data structures 
 mappings               = {}
 vocab                  = {}
@@ -36,18 +37,20 @@ disp_vocab             = {}
 
 
 def init_disp_files(): 
-    global fdata_file, fvocab_file, fdisp_data_file, fdisp_vocab_file	
+    global fdata_file, fvocab_file, fdisp_data_file, fdisp_vocab_file,fdisp_score_file
     base_filename     = os.path.basename(data_filename) 
     
     data_file         = os.path.join(techterms_dir, EMB_DIR, base_filename + '.6gram.data')
     vocab_file        = os.path.join(techterms_dir, EMB_DIR, base_filename + '.6gram.vocab')
     disp_data_file    = os.path.join(techterms_dir, EMB_DIR, base_filename + '.' + disp + '.6gram.data')
     disp_vocab_file   = os.path.join(techterms_dir, EMB_DIR, base_filename + '.' + disp + '.6gram.vocab')
+    disp_score_file   = os.path.join(techterms_dir, EMB_DIR, base_filename + '.' + disp + '.6gram.vocab.score')
 
     fdata_file        = codecs.open(data_file,       'r', encoding='utf-8')
     fvocab_file       = codecs.open(vocab_file,      'r', encoding='utf-8')
     fdisp_data_file   = codecs.open(disp_data_file,  'w', encoding='utf-8')
     fdisp_vocab_file  = codecs.open(disp_vocab_file, 'w', encoding='utf-8')
+    fdisp_score_file  = codecs.open(disp_score_file, 'w', encoding='utf-8')
 
 
 def load_disp_mappings():
@@ -89,18 +92,29 @@ def apply():
 		    fdisp_data_file.write(line)
 		    for wrd in splits:
 			    if wrd in vocab:
-			         disp_vocab[wrd] = 1
+                                 if wrd in disp_vocab:
+                                    disp_vocab[wrd] += 1
+                                 else:
+                                    disp_vocab[wrd] = 1
 	            disp_cnt += 1 
 	       data_cnt += 1
         print '# of docs in disp', disp_cnt
-	fdisp_vocab_wrds = []	 
+	fdisp_vocab_wrds = []	
+        vocab_wrd_weights = {}
+        fdisp_vocab_weights = []  
 	for wrd in disp_vocab:
+             vocab_wrd_weights[wrd] = float(disp_vocab[wrd])/float(vocab[wrd])
 	     fdisp_vocab_wrds.append( (vocab[wrd], wrd) )
+             fdisp_vocab_weights.append( (vocab_wrd_weights[wrd], wrd) )
 	fdisp_vocab_wrds.sort(reverse=True)
+        fdisp_vocab_weights.sort(reverse=True)
         for cnt, wrd in fdisp_vocab_wrds:
               fdisp_vocab_file.write(wrd + '\n')
+        for score,wrd in fdisp_vocab_weights:
+             fdisp_score_file.write(wrd + ' ' + str(vocab_wrd_weights[wrd]) + '\n')
         fdisp_vocab_file.close()	
 	fdisp_data_file.close()
+        fdisp_score_file.close()
 	print 'done generating disp level data'
 	   
 
